@@ -6,14 +6,22 @@ namespace PunchMan
     {
         private readonly Character _character;
         private readonly CharacterSettings _characterSettings;
+        private readonly Camera _camera;
         
-        public CharacterMovement(Character character, CharacterSettings characterSettings)
+        public CharacterMovement(Camera camera, Character character, CharacterSettings characterSettings)
         {
             _character = character;
             _characterSettings = characterSettings;
+            _camera = camera;
+        }
+
+        public void ForwardMove()
+        {
+             _character.transform.Translate(0, 0, _characterSettings.AxeZMoveSpeed * Time.deltaTime, Space.Self);
+             _camera.transform.Translate(0, 0, _characterSettings.AxeZMoveSpeed * Time.deltaTime, Space.World);
         }
         
-        public void Move(Vector2 direction)
+        public void LeftRightMove(Vector2 direction)
         {
             var currentPosition = _character.transform.position;
             var totalSpeed = _characterSettings.AxeXMoveSpeed * Time.deltaTime;

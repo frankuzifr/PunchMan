@@ -13,12 +13,13 @@ namespace PunchMan
         
         private void Awake()
         {
+            var mainCamera = Camera.main;
             _character = GetComponent<Character>();
-            _characterMovement = new CharacterMovement(_character, characterSettings);
+            _characterMovement = new CharacterMovement(mainCamera, _character, characterSettings);
         }
         private void Update()
         {
-            _character.transform.Translate(0, 0, characterSettings.AxeXMoveSpeed * Time.deltaTime);
+            _characterMovement.ForwardMove();
             
             if (Input.touchCount <= 0)
                 return;
@@ -35,7 +36,7 @@ namespace PunchMan
             if (Mathf.Abs(delta.x) > 0.1f)
                 direction = new Vector2(delta.x, 0).normalized;
 
-            _characterMovement.Move(direction);
+            _characterMovement.LeftRightMove(direction);
             _startPosition = Vector2.zero;
         }
 

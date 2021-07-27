@@ -11,13 +11,14 @@ namespace PunchMan
         
         private void Awake()
         {
+            var mainCamera = Camera.main;
             _character = GetComponent<Character>();
-            _characterMovement = new CharacterMovement(_character, characterSettings);
+            _characterMovement = new CharacterMovement(mainCamera, _character, characterSettings);
         }
 
         private void Update()
         {
-            _character.transform.Translate(0, 0, characterSettings.AxeZMoveSpeed * Time.deltaTime);
+            _characterMovement.ForwardMove();
             
             if (!Input.GetMouseButton(0))
                 return;
@@ -26,7 +27,7 @@ namespace PunchMan
                 return;
             
             var direction = new Vector2(Input.GetAxis("Mouse X"), 0).normalized;
-            _characterMovement.Move(direction);
+            _characterMovement.LeftRightMove(direction);
         }
 
     }
