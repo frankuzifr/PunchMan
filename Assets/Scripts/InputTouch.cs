@@ -19,6 +19,12 @@ namespace PunchMan
         }
         private void Update()
         {
+            if (_character.IsGameOver())
+                return;
+            
+            if (_character.IsNearWall())
+                return;
+            
             _characterMovement.ForwardMove();
             
             if (Input.touchCount <= 0)

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   axeZMoveSpeed: 1.4
   axeXMoveSpeed: 40
-  minDistanceX: -10
-  maxDistanceX: 10
+  minDistanceX: -5
+  maxDistanceX: 5
