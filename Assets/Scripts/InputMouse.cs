@@ -29,7 +29,7 @@ namespace PunchMan
             if (!Input.GetMouseButton(0))
                 return;
 
-            if ((Input.GetAxis("Mouse X") < 0.1) && (Input.GetAxis("Mouse X") > -0.1)) 
+            if ((Input.GetAxis("Mouse X") < 0.001) && (Input.GetAxis("Mouse X") > -0.001)) 
                 return;
             
             var direction = new Vector2(Input.GetAxis("Mouse X"), 0).normalized;

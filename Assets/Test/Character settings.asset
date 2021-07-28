@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Character settings
   m_EditorClassIdentifier: 
   axeZMoveSpeed: 1.4
-  axeXMoveSpeed: 40
+  axeXMoveSpeed: 15
   minDistanceX: -5
   maxDistanceX: 5

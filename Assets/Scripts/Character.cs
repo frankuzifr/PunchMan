@@ -14,22 +14,34 @@ namespace PunchMan
         private void OnTriggerEnter(Collider other)
         {
             Debug.Log("VAR");
-            if (!other.gameObject.TryGetComponent<Wall>(out var wall))
-                return;
-
-            var wallHealth = wall.Health;
-            
-            _isNearWall = true;
-
-            if (wallHealth < health)
+            if (other.TryGetComponent<Wall>(out var wall))
             {
-                StartCoroutine(DestroyDelay(wall));
-                health -= wallHealth;
+                var wallHealth = wall.Health;
+
+                _isNearWall = true;
+
+                if (wallHealth < health)
+                {
+                    StartCoroutine(DestroyDelay(wall));
+                    health -= wallHealth;
+                }
+                else
+                {
+                    Debug.Log("Недостаточно силы");
+                    _isGameOver = true;
+                }
             }
-            else
+
+            if (other.TryGetComponent<Weight>(out var weight))
             {
-                Debug.Log("Недостаточно силы");
-                _isGameOver = true;
+                health++;
+                weight.DestroyWeight();
+            }
+
+            if (other.TryGetComponent<Burger>(out var burger))
+            {
+                health--;
+                burger.DestroyBurger();
             }
         }
 
