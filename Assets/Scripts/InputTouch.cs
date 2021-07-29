@@ -7,7 +7,8 @@ namespace PunchMan
         [SerializeField] private CharacterSettings characterSettings;
         
         private Character _character;
-        private CharacterMovement _characterMovement;
+        private CharacterBehaviour _characterBehaviour;
+        private GameState _gameState;
 
         private Vector2 _startPosition;
         
@@ -15,17 +16,18 @@ namespace PunchMan
         {
             var mainCamera = Camera.main;
             _character = GetComponent<Character>();
-            _characterMovement = new CharacterMovement(mainCamera, _character, characterSettings);
+            _gameState = GetComponentInParent<GameState>();
+            _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _gameState);
         }
         private void Update()
         {
-            if (_character.IsGameOver())
+            if (_gameState.IsGameOver)
                 return;
             
             if (_character.IsNearWall())
                 return;
             
-            _characterMovement.ForwardMove();
+            _characterBehaviour.ForwardMove();
             
             if (Input.touchCount <= 0)
                 return;
@@ -42,7 +44,7 @@ namespace PunchMan
             if (Mathf.Abs(delta.x) > 0.1f)
                 direction = new Vector2(delta.x, 0).normalized;
 
-            _characterMovement.LeftRightMove(direction);
+            _characterBehaviour.LeftRightMove(direction);
             _startPosition = Vector2.zero;
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace PunchMan
@@ -8,9 +7,26 @@ namespace PunchMan
     {
         [SerializeField] private int health;
 
-        private bool _isNearWall;
-        private bool _isGameOver;
+        public int Health => health;
+
+        private CharacterBehaviour _characterBehaviour;
         
+        private GameState _gameState;
+        
+        private Boss _boss;
+
+        private bool _isNearWall;
+
+        private void Awake()
+        {
+            _gameState = GetComponentInParent<GameState>();
+        }
+
+        public void SetCharacterBehaviour(CharacterBehaviour characterBehaviour)
+        {
+            _characterBehaviour = characterBehaviour;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             Debug.Log("VAR");
@@ -28,7 +44,7 @@ namespace PunchMan
                 else
                 {
                     Debug.Log("Недостаточно силы");
-                    _isGameOver = true;
+                    _gameState.GameOver();
                 }
             }
 
@@ -43,13 +59,20 @@ namespace PunchMan
                 health--;
                 burger.DestroyBurger();
             }
+
+            if (other.TryGetComponent<Boss>(out var boss))
+            {
+                _gameState.BossFight();
+                _boss = boss;
+                _characterBehaviour.SetCharacterPositionForBossFight();
+            }
         }
 
         public bool IsNearWall()
             => _isNearWall;
-        
-        public bool IsGameOver()
-            => _isGameOver;
+
+        public Boss GetBoss()
+            => _boss;
 
         private IEnumerator DestroyDelay(Wall wall)
         {

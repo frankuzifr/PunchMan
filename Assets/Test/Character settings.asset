@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e94d680834540d4a8e2faaa9a3b6bd4, type: 3}
   m_Name: Character settings
   m_EditorClassIdentifier: 
-  axeZMoveSpeed: 1.4
+  axeZMoveSpeed: 3
   axeXMoveSpeed: 15
   minDistanceX: -5
   maxDistanceX: 5

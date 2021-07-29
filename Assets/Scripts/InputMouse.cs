@@ -7,24 +7,35 @@ namespace PunchMan
         [SerializeField] private CharacterSettings characterSettings;
         
         private Character _character;
-        private CharacterMovement _characterMovement;
+        private CharacterBehaviour _characterBehaviour;
+        private GameState _gameState;
         
         private void Awake()
         {
             var mainCamera = Camera.main;
             _character = GetComponent<Character>();
-            _characterMovement = new CharacterMovement(mainCamera, _character, characterSettings);
+            _gameState = GetComponentInParent<GameState>();
+            _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _gameState);
+            _character.SetCharacterBehaviour(_characterBehaviour);
         }
 
         private void Update()
         {
-            if (_character.IsGameOver())
+            if (_gameState.IsGameOver)
                 return;
             
             if (_character.IsNearWall())
                 return;
             
-            _characterMovement.ForwardMove();
+            if (_gameState.IsBossFight)
+            {
+                if (Input.GetMouseButtonDown(0))
+                    _characterBehaviour.HitBoss();
+                
+                return;
+            }
+            
+            _characterBehaviour.ForwardMove();
             
             if (!Input.GetMouseButton(0))
                 return;
@@ -33,7 +44,7 @@ namespace PunchMan
                 return;
             
             var direction = new Vector2(Input.GetAxis("Mouse X"), 0).normalized;
-            _characterMovement.LeftRightMove(direction);
+            _characterBehaviour.LeftRightMove(direction);
         }
 
     }
