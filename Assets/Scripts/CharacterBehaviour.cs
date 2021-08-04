@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace PunchMan
 {
@@ -7,16 +8,16 @@ namespace PunchMan
         private readonly Character _character;
         private readonly CharacterSettings _characterSettings;
         private readonly Camera _camera;
-        private readonly GameState _gameState;
+        private readonly LevelState _levelState;
 
         private Boss _boss;
         
-        public CharacterBehaviour(Camera camera, Character character, CharacterSettings characterSettings, GameState gameState)
+        public CharacterBehaviour(Camera camera, Character character, CharacterSettings characterSettings, LevelState levelState)
         {
             _character = character;
             _characterSettings = characterSettings;
             _camera = camera;
-            _gameState = gameState;
+            _levelState = levelState;
         }
 
         public void ForwardMove()
@@ -51,14 +52,14 @@ namespace PunchMan
 
         public void HitBoss()
         {
-            var characterHealth = _character.Health;
-            
-            _boss.DecreaseHealth(characterHealth);
+            var characterStrength = _character.Strength;
 
+            _boss.DecreaseHealth(characterStrength);
+            
             if (_boss.Health <= 0)
             {
                 _boss.DestroyBoss();
-                _gameState.GameOver();
+                _levelState.LevelComplete();
             }
         }
     }

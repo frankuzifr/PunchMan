@@ -1,17 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PunchMan
 {
     public class Character : MonoBehaviour
     {
-        [SerializeField] private int health;
+        [FormerlySerializedAs("health")] [SerializeField] private int strength;
 
-        public int Health => health;
+        public int Strength => strength;
 
         private CharacterBehaviour _characterBehaviour;
         
-        private GameState _gameState;
+        private LevelState _levelState;
         
         private Boss _boss;
 
@@ -19,7 +20,7 @@ namespace PunchMan
 
         private void Awake()
         {
-            _gameState = GetComponentInParent<GameState>();
+            _levelState = GetComponentInParent<LevelState>();
         }
 
         public void SetCharacterBehaviour(CharacterBehaviour characterBehaviour)
@@ -29,42 +30,41 @@ namespace PunchMan
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("VAR");
             if (other.TryGetComponent<Wall>(out var wall))
             {
                 var wallHealth = wall.Health;
 
                 _isNearWall = true;
 
-                if (wallHealth < health)
+                if (wallHealth < strength)
                 {
                     StartCoroutine(DestroyDelay(wall));
-                    health -= wallHealth;
+                    strength -= wallHealth;
                 }
                 else
                 {
                     Debug.Log("Недостаточно силы");
-                    _gameState.GameOver();
+                    _levelState.GameOver();
                 }
             }
 
             if (other.TryGetComponent<Weight>(out var weight))
             {
-                health++;
+                strength += weight.MultipliedStrength;
                 weight.DestroyWeight();
             }
 
             if (other.TryGetComponent<Burger>(out var burger))
             {
-                health--;
+                strength -= burger.MultipliedStrength;
                 burger.DestroyBurger();
             }
 
             if (other.TryGetComponent<Boss>(out var boss))
             {
-                _gameState.BossFight();
                 _boss = boss;
                 _characterBehaviour.SetCharacterPositionForBossFight();
+                _levelState.BossFight();
             }
         }
 

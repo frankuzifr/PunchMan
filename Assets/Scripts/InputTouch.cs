@@ -8,24 +8,43 @@ namespace PunchMan
         
         private Character _character;
         private CharacterBehaviour _characterBehaviour;
-        private GameState _gameState;
+        private LevelState _levelState;
 
         private Vector2 _startPosition;
+        
+        private float _time;
         
         private void Awake()
         {
             var mainCamera = Camera.main;
             _character = GetComponent<Character>();
-            _gameState = GetComponentInParent<GameState>();
-            _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _gameState);
+            _levelState = GetComponentInParent<LevelState>();
+            _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _levelState);
         }
         private void Update()
         {
-            if (_gameState.IsGameOver)
+            if (_levelState.IsGameOver)
+                return;
+            
+            if (_levelState.IsLevelComplete)
                 return;
             
             if (_character.IsNearWall())
                 return;
+            
+            if (_levelState.IsBossFight)
+            {
+                _time += Time.deltaTime;
+                if (_time > 5)
+                {
+                    _levelState.GameOver();
+                }
+                
+                if (Input.GetMouseButtonDown(0))
+                    _characterBehaviour.HitBoss();
+                
+                return;
+            }
             
             _characterBehaviour.ForwardMove();
             
