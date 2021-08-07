@@ -28,10 +28,7 @@ namespace PunchMan
             
             if (_levelState.IsLevelComplete)
                 return;
-            
-            if (_character.IsNearWall())
-                return;
-            
+
             if (_levelState.IsBossFight)
             {
                 _time += Time.deltaTime;

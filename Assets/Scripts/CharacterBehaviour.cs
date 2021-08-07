@@ -45,7 +45,7 @@ namespace PunchMan
             var middleDistanceX = maxDistanceX + minDistanceX;
             var differenceDistanceX = middleDistanceX - currentCharacterPosition.x;
 
-            _character.transform.Translate(differenceDistanceX, 1, 1);
+            _character.transform.Translate(differenceDistanceX, 0, 1);
             
             _boss = _character.GetBoss();
         }
@@ -54,6 +54,7 @@ namespace PunchMan
         {
             var characterStrength = _character.Strength;
 
+            _character.RotateCharacterForHit();
             _boss.DecreaseHealth(characterStrength);
             
             if (_boss.Health <= 0)

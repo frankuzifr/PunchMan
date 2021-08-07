@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,16 +12,16 @@ namespace PunchMan
         public int Strength => strength;
 
         private CharacterBehaviour _characterBehaviour;
-        
+        private CharacterElements _characterElements;
+        private Hand _characterHand;
         private LevelState _levelState;
-        
         private Boss _boss;
-
-        private bool _isNearWall;
 
         private void Awake()
         {
             _levelState = GetComponentInParent<LevelState>();
+            _characterElements = GetComponentInChildren<CharacterElements>();
+            _characterHand = _characterElements.GetComponentInChildren<Hand>();
         }
 
         public void SetCharacterBehaviour(CharacterBehaviour characterBehaviour)
@@ -33,12 +34,12 @@ namespace PunchMan
             if (other.TryGetComponent<Wall>(out var wall))
             {
                 var wallHealth = wall.Health;
-
-                _isNearWall = true;
-
                 if (wallHealth < strength)
                 {
-                    StartCoroutine(DestroyDelay(wall));
+                    var handScaleMultiplied = wallHealth / 100f;
+                    _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
+                    RotateCharacterForHit();
+                    wall.DestroyWall();
                     strength -= wallHealth;
                 }
                 else
@@ -51,12 +52,16 @@ namespace PunchMan
             if (other.TryGetComponent<Weight>(out var weight))
             {
                 strength += weight.MultipliedStrength;
+                var handScaleMultiplied = weight.MultipliedStrength / 100f;
+                _characterHand.transform.localScale += new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
                 weight.DestroyWeight();
             }
 
             if (other.TryGetComponent<Burger>(out var burger))
             {
                 strength -= burger.MultipliedStrength;
+                var handScaleMultiplied = burger.MultipliedStrength / 100f;
+                _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
                 burger.DestroyBurger();
             }
 
@@ -68,17 +73,14 @@ namespace PunchMan
             }
         }
 
-        public bool IsNearWall()
-            => _isNearWall;
+        public void RotateCharacterForHit()
+        {
+            DOTween.Sequence()
+                .Append(_characterElements.transform.DORotate(new Vector3(0, -45, 0), 0.1f))
+                .Append(_characterElements.transform.DORotate(new Vector3(0, 0, 0), 0.1f));
+        }
 
         public Boss GetBoss()
             => _boss;
-
-        private IEnumerator DestroyDelay(Wall wall)
-        {
-            yield return new WaitForSeconds(2f);
-            wall.DestroyWall();
-            _isNearWall = false;
-        }
     }
 }
