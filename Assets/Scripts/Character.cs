@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using DG.Tweening;
+﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,12 +16,15 @@ namespace PunchMan
         private Hand _characterHand;
         private LevelState _levelState;
         private Boss _boss;
+        private TMP_Text _strengthInfoLabel;
 
         private void Awake()
         {
             _levelState = GetComponentInParent<LevelState>();
             _characterElements = GetComponentInChildren<CharacterElements>();
             _characterHand = _characterElements.GetComponentInChildren<Hand>();
+            _strengthInfoLabel = GetComponentInChildren<TMP_Text>();
+            _strengthInfoLabel.text = strength.ToString();
         }
 
         public void SetCharacterBehaviour(CharacterBehaviour characterBehaviour)
@@ -36,11 +39,12 @@ namespace PunchMan
                 var wallHealth = wall.Health;
                 if (wallHealth < strength)
                 {
-                    var handScaleMultiplied = wallHealth / 100f;
-                    _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
                     RotateCharacterForHit();
-                    wall.DestroyWall();
+                    var handScaleMultiplied = wallHealth / 100f;
                     strength -= wallHealth;
+                    _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
+                    _strengthInfoLabel.text = strength.ToString();
+                    wall.DestroyWall();
                 }
                 else
                 {
@@ -54,6 +58,7 @@ namespace PunchMan
                 strength += weight.MultipliedStrength;
                 var handScaleMultiplied = weight.MultipliedStrength / 100f;
                 _characterHand.transform.localScale += new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
+                _strengthInfoLabel.text = strength.ToString();
                 weight.DestroyWeight();
             }
 
@@ -62,6 +67,7 @@ namespace PunchMan
                 strength -= burger.MultipliedStrength;
                 var handScaleMultiplied = burger.MultipliedStrength / 100f;
                 _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
+                _strengthInfoLabel.text = strength.ToString();
                 burger.DestroyBurger();
             }
 
