@@ -10,7 +10,6 @@ namespace PunchMan
         private CharacterBehaviour _characterBehaviour;
         private LevelState _levelState;
         
-        private float _time;
 
         private void Awake()
         {
@@ -31,8 +30,8 @@ namespace PunchMan
 
             if (_levelState.IsBossFight)
             {
-                _time += Time.deltaTime;
-                if (_time > 5)
+                var time = _levelState.SetTime();
+                if (time < 0)
                 {
                     _levelState.GameOver();
                 }
