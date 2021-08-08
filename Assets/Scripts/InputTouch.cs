@@ -18,6 +18,7 @@ namespace PunchMan
             _character = GetComponent<Character>();
             _levelState = GetComponentInParent<LevelState>();
             _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _levelState);
+            _character.SetCharacterBehaviour(_characterBehaviour);
         }
         private void Update()
         {
@@ -35,7 +36,7 @@ namespace PunchMan
                     _levelState.GameOver();
                 }
 
-                if (Input.touchCount > 0)
+                if (Input.GetTouch(0).phase == TouchPhase.Began)
                 {
                     _character.HitAudioSource.Play();
                     _characterBehaviour.HitBoss();
@@ -59,10 +60,11 @@ namespace PunchMan
             var direction = Vector2.zero;
                 
             if (Mathf.Abs(delta.x) > 0.1f)
-                direction = new Vector2(delta.x, 0).normalized;
+                direction = new Vector2(delta.x, 0);
 
             _characterBehaviour.LeftRightMove(direction);
-            _startPosition = Vector2.zero;
+
+            _startPosition = Input.GetTouch(0).position;
         }
 
     }

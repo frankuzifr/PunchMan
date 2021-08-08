@@ -34,6 +34,7 @@ namespace PunchMan
             _endLevelDisplay.NextLevel.gameObject.SetActive(false);
             _endLevelDisplay.LevelState.text = "GameOver";
             _endLevelDisplay.LevelState.color = Color.red;
+            _bossFight.gameObject.SetActive(false);
         } 
         
         public void LevelComplete()

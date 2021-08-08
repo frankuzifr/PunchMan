@@ -4,6 +4,5 @@ namespace PunchMan
 {
     public class NextLevel : MonoBehaviour
     {
-        
     }
 }

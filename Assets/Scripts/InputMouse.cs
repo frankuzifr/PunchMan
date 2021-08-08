@@ -53,7 +53,7 @@ namespace PunchMan
             if ((Input.GetAxis("Mouse X") < 0.001) && (Input.GetAxis("Mouse X") > -0.001)) 
                 return;
             
-            var direction = new Vector2(Input.GetAxis("Mouse X"), 0).normalized;
+            var direction = new Vector2(Input.GetAxis("Mouse X"), 0);
             _characterBehaviour.LeftRightMove(direction);
         }
 
