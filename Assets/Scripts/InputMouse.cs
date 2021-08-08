@@ -10,7 +10,6 @@ namespace PunchMan
         private CharacterBehaviour _characterBehaviour;
         private LevelState _levelState;
         
-
         private void Awake()
         {
             var mainCamera = Camera.main;

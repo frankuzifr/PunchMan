@@ -8,6 +8,7 @@ namespace PunchMan
         private readonly CharacterSettings _characterSettings;
         private readonly Camera _camera;
         private readonly LevelState _levelState;
+        private int _test = 0;
 
         private Boss _boss;
         
@@ -45,7 +46,7 @@ namespace PunchMan
             var differenceDistanceX = middleDistanceX - currentCharacterPosition.x;
 
             _character.transform.Translate(differenceDistanceX, 0, 1);
-            
+            _test++;
             _boss = _character.GetBoss();
         }
 

@@ -20,6 +20,7 @@ namespace PunchMan
             _characterBehaviour = new CharacterBehaviour(mainCamera, _character, characterSettings, _levelState);
             _character.SetCharacterBehaviour(_characterBehaviour);
         }
+        
         private void Update()
         {
             if (_levelState.IsGameOver)
