@@ -35,9 +35,12 @@ namespace PunchMan
                 {
                     _levelState.GameOver();
                 }
-                
+
                 if (Input.GetMouseButtonDown(0))
+                {
+                    _character.HitAudioSource.Play();
                     _characterBehaviour.HitBoss();
+                }
                 
                 return;
             }

@@ -1,14 +1,18 @@
 ﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PunchMan
 {
     public class Character : MonoBehaviour
     {
-        [FormerlySerializedAs("health")] [SerializeField] private int strength;
+        [SerializeField] private int strength;
+        [SerializeField] private AudioSource eatAudioSource;
+        [SerializeField] private AudioSource swingAudioSource;
+        [SerializeField] private AudioSource hitAudioSource;
 
+        public AudioSource HitAudioSource => hitAudioSource;
+        
         public int Strength => strength;
 
         private CharacterBehaviour _characterBehaviour;
@@ -36,6 +40,7 @@ namespace PunchMan
         {
             if (other.TryGetComponent<Wall>(out var wall))
             {
+                hitAudioSource.Play();
                 var wallHealth = wall.Health;
                 if (wallHealth < strength)
                 {
@@ -48,13 +53,13 @@ namespace PunchMan
                 }
                 else
                 {
-                    Debug.Log("Недостаточно силы");
                     _levelState.GameOver();
                 }
             }
 
             if (other.TryGetComponent<Weight>(out var weight))
             {
+                swingAudioSource.Play();
                 strength += weight.MultipliedStrength;
                 var handScaleMultiplied = weight.MultipliedStrength / 100f;
                 _characterHand.transform.localScale += new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
@@ -64,7 +69,11 @@ namespace PunchMan
 
             if (other.TryGetComponent<Burger>(out var burger))
             {
+                eatAudioSource.Play();
                 strength -= burger.MultipliedStrength;
+                if (strength < 0)
+                    strength = 0;
+                
                 var handScaleMultiplied = burger.MultipliedStrength / 100f;
                 _characterHand.transform.localScale -= new Vector3(handScaleMultiplied, handScaleMultiplied, handScaleMultiplied);
                 _strengthInfoLabel.text = strength.ToString();

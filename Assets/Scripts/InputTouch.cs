@@ -12,8 +12,6 @@ namespace PunchMan
 
         private Vector2 _startPosition;
         
-        private float _time;
-        
         private void Awake()
         {
             var mainCamera = Camera.main;
@@ -31,14 +29,17 @@ namespace PunchMan
 
             if (_levelState.IsBossFight)
             {
-                _time += Time.deltaTime;
-                if (_time > 5)
+                var time = _levelState.SetTime();
+                if (time < 0)
                 {
                     _levelState.GameOver();
                 }
-                
-                if (Input.GetMouseButtonDown(0))
+
+                if (Input.touchCount > 0)
+                {
+                    _character.HitAudioSource.Play();
                     _characterBehaviour.HitBoss();
+                }
                 
                 return;
             }
